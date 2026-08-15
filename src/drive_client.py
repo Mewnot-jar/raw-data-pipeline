@@ -1,15 +1,14 @@
 import os
-from dotenv import load_dotenv
+from config.settings import CREDENTIALS_PATH
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-load_dotenv()
 
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
 def build_drive_service():
     
-    credentials_path = os.getenv("CREDENTIALS")
+    credentials_path = CREDENTIALS_PATH
     if credentials_path is None:
         raise ValueError("Falta la variable de entorno CREDENTIALS en el .env")
     if not os.path.exists(credentials_path):

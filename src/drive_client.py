@@ -9,7 +9,6 @@ SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
 #Construye el servicio drive con las credenciales CREDENTIALS_PATH
 def build_drive_service():
-    
     credentials_path = CREDENTIALS_PATH
     if credentials_path is None:
         raise ValueError("Falta la variable de entorno CREDENTIALS en el .env")
@@ -29,7 +28,7 @@ def list_company_folders(service, root_folder_id):
         q=query,
         fields="files(id, name)"
     ).execute()
-
+ 
     return result["files"]
 
 #Lista los archivos dentro de la compañia con company_folder_id

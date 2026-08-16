@@ -1,5 +1,12 @@
 from minio import Minio
-from config.settings import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+from config.settings import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET
+
+
+def verify_bucket_exists(client, bucket):
+    if not client.bucket_exists(bucket):
+        raise ValueError(
+            f"El Bucket '{bucket}' no existe en MinIO. Crealo antes de correr el script."
+        )
 
 #Construye el cliente de Minio con las credenciales de minio en .env
 def build_minio_client():
@@ -22,5 +29,5 @@ if __name__ == "__main__":
     #Crea al cliente
     client = build_minio_client()
     #Cheka si existe el bucket
-    exist = client.bucket_exists("bronze")
+    exist = client.bucket_exists(MINIO_BUCKET)
     print(f"Bucket existe: {exist}")

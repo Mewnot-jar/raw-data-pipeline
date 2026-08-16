@@ -73,7 +73,6 @@ def main():
 
     print("--- Resumen ---")
     if not failed_files:
-        print("Todo se subio sin errores")
         print(f"{uploaded_count} archivo(s) subidos/actualizados")
         print(f"{skipped_count} archivo(s) saltados")
         print(f"{renamed_count} archivo(s) renombrados")

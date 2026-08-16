@@ -1,8 +1,9 @@
 import os
+import io 
 from config.settings import CREDENTIALS_PATH, DRIVE_ROOT_FOLDER_ID
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
-
+from googleapiclient.http import MediaIoBaseDownload
 
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 
@@ -42,6 +43,20 @@ def list_files_in_company(service, company_folder_id):
     
     return result["files"]
 
+def download_file_to_memory(service, file_id):
+    request = service.files().get_media(fileId=file_id)
+    file_buffer = io.BytesIO()
+
+    downloader = MediaIoBaseDownload(file_buffer, request)
+
+    done = False
+    while not done:
+        status, done = downloader.next_chunk()
+        print(status)
+    file_buffer.seek(0)
+
+    return file_buffer
+
 if __name__ == "__main__":
     #Construye el servicio
     service = build_drive_service()
@@ -60,3 +75,8 @@ if __name__ == "__main__":
     files = list_files_in_company(service, first_company["id"])
     #imprime los archivos dentro de la compañia (carpeta)
     print(f"Archivos en {first_company["name"]}: {files}")
+
+    #Descarga un archivo segun su File Id y se guarda en la memory buffer
+    buffer = download_file_to_memory(service, "1tYfYwhCKObTcwkDtzKYJdJlgti7D-OMY")
+    #Imprime el tamaño del archivo
+    print(len(buffer.read()), "bytes descargados")

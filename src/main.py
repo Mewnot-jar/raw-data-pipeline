@@ -7,17 +7,14 @@ def main():
     client = build_minio_client()
 
     companies = list_company_folders(service, DRIVE_ROOT_FOLDER_ID)
-    company = companies[1]
-
-    files = list_files_in_company(service, company["id"])
-    first_file = files[0]
-
-    buffer = download_file_to_memory(service, first_file["id"])
-    object_name = f"{company['name']}/{first_file['name']}"
     bucket = "bronze"
-    upload_file(client, bucket, object_name, buffer)
-
-    print(f"Subido: {object_name}")
+    for company in companies:
+        files = list_files_in_company(service, company["id"])
+        for file in files:
+            buffer = download_file_to_memory(service, file["id"])  
+            object_name = f"{company['name']}/{file['name']}"
+            upload_file(client, bucket, object_name, buffer)
+            print(f"Subido: {object_name}")
 
 if __name__ == "__main__":
     main()

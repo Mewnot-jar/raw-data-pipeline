@@ -10,6 +10,10 @@ def build_minio_client():
     )
     return client
 
+def upload_file(client, bucket, object_name, file_buffer):
+    file_length = len(file_buffer.getbuffer())
+    client.put_object(bucket, object_name, data=file_buffer, length=file_length)
+
 if __name__ == "__main__":
     client = build_minio_client()
     exist = client.bucket_exists("bronze")

@@ -11,3 +11,9 @@ def test_verify_bucket_exists_without_bucket():
     client = build_minio_client()
     with pytest.raises(ValueError):
         verify_bucket_exists(client, "not-real-bucket")
+
+def test_minio_connection_and_credentials():
+    client = build_minio_client()
+    buckets = client.list_buckets()
+
+    assert isinstance(buckets, list)

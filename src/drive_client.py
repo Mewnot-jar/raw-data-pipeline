@@ -23,23 +23,19 @@ def build_drive_service():
 #Lista las carpetas de las compañias en el drive
 def list_company_folders(service, root_folder_id):
     query = f"'{root_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder'"
-
     result = service.files().list(
         q=query,
         fields="files(id, name)"
     ).execute()
- 
     return result["files"]
 
 #Lista los archivos dentro de la compañia con company_folder_id
 def list_files_in_company(service, company_folder_id):
     query = f"'{company_folder_id}' in parents"
-    
     result = service.files().list(
         q=query,
-        fields="files(id, name, mimeType)"
+        fields="files(id, name, mimeType, modifiedTime)"
     ).execute()
-    
     return result["files"]
 
 def download_file_to_memory(service, file_id):

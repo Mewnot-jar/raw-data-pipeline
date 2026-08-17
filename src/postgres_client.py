@@ -1,6 +1,7 @@
 import os
 import io
 import subprocess
+import pandas as pd
 from sqlalchemy import create_engine, text
 from config.settings import HOST_DB, PORT_DB, DATABASE, USER_DB, PASSWORD_DB, DUMP_PORT_DB
 
@@ -43,3 +44,27 @@ def export_schema_to_sql(schema_name):
 
 def load_dataframe(engine, df, schema_name, table_name):
     df.to_sql(table_name, engine, schema=schema_name, if_exists="replace", index=False)
+
+def list_bronze_schemas(engine):
+
+    query = text("""
+        SELECT schema_name FROM information_schema.schemata
+        WHERE schema_name LIKE '%_bronze'
+    """)
+    result = pd.read_sql(query, engine)
+    return result["schema_name"].tolist()
+
+def list_tables_in_schema(engine, schema_name):
+
+    query = text("""
+        SELECT table_name FROM information_schema.tables
+        WHERE table_schema = :schema
+    """)
+    
+    result = pd.read_sql(query, engine, params={"schema": schema_name})
+    return result["table_name"].tolist()
+
+def read_table(engine, schema_name, table_name):
+
+    query = text(f'SELECT * FROM "{schema_name}"."{table_name}"')
+    return pd.read_sql(query, engine)

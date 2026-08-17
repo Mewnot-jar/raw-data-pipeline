@@ -18,7 +18,7 @@ def main():
     print(f"Empresas encotradas en raw: {companies}")
 
     for company in companies:
-        schema_name = sanitize_name(company)
+        schema_name = f"{sanitize_name(company)}_bronze"
         create_schema_if_not_exists(engine, schema_name)
         object_names = list_objects_in_bucket(minio_client, MINIO_BUCKET, prefix=f"{company}/")
 

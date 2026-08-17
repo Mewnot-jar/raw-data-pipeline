@@ -54,6 +54,10 @@ def list_existing_objects_by_drive_id(client, bucket, company_name):
             }
     return existing
 
+def list_company_prefixes(client, bucket):
+    objects = client.list_objects(bucket, recursive=False)
+    return [obj.object_name.rstrip("/") for obj in objects if obj.is_dir]
+
 def list_objects_in_bucket(client, bucket, prefix):
     objects = client.list_objects(bucket, prefix=prefix, recursive=True)
     return [obj.object_name for obj in objects]

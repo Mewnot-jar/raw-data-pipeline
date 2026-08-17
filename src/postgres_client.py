@@ -13,5 +13,5 @@ def create_schema_if_not_exists(engine, schema_name):
         connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
         connection.commit()
 
-def load_data_frame(engine, df, schema_name, table_name):
+def load_dataframe(engine, df, schema_name, table_name):
     df.to_sql(table_name, engine, schema=schema_name, if_exists="replace", index=False)

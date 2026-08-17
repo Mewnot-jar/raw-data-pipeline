@@ -1,3 +1,4 @@
+import io 
 from minio import Minio
 from config.settings import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET
 
@@ -53,7 +54,19 @@ def list_existing_objects_by_drive_id(client, bucket, company_name):
             }
     return existing
 
+def list_objects_in_bucket(client, bucket, prefix):
+    objects = client.list_objects(bucket, prefix=prefix, recursive=True)
+    return [obj.object_name for obj in objects]
 
+def download_object_to_memory(client, bucket, object_name):
+    response = client.get_object(bucket, object_name)
+    try:
+        buffer = io.BytesIO(response.read())
+    finally:
+        response.close()
+        response.release_conn()
+    buffer.seek(0)
+    return buffer
 
 if __name__ == "__main__":
     #Crea al cliente
